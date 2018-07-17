@@ -58,7 +58,7 @@ void evtbus::dispatch()
 			int events = epevt->events;
 			evthdl *hdl = (evthdl *) epevt->data.ptr;
 			
-			I("idx: %d, events: %018p", i, (void *) events);
+			I("idx: %d, events: %08X", i, events);
 
 			bool down = true;
 			if ((events & EPEVT_ERR))

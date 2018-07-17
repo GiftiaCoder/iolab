@@ -4,15 +4,13 @@
 
 #include "inputhdl.h"
 
-#include <sys/types.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
 
 class sockhdl : public inputhdl
 {
 public:
-	sockhdl(int fd, struct sockaddr_in *addr);
-
+	bool open(int fd, struct sockaddr_in *addr);
+	
 	const char *get_ip();
 	int get_port();
 

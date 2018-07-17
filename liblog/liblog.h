@@ -22,11 +22,12 @@ time_t get_time_usec();
 
 void print_stacktrace();
 
-#ifdef __FUNCSIG__
-#define LOG(_lvl_, _fmt_, ...) print_log(_lvl_, __FILE__, __FUNCSIG__, __LINE__, _fmt_, ##__VA_ARGS__)
-#else
-#define LOG(_lvl_, _fmt_, ...) print_log(_lvl_, __FILE__, __FUNCTION__, __LINE__, _fmt_, ##__VA_ARGS__)
-#endif
+//#ifdef __PRETTY_FUNCTION__
+//#define LOG(_lvl_, _fmt_, ...) print_log(_lvl_, __FILE__, __PRETTY_FUNCTION__, __LINE__, _fmt_, ##__VA_ARGS__)
+//#else
+//#define LOG(_lvl_, _fmt_, ...) print_log(_lvl_, __FILE__, __FUNCTION__, __LINE__, _fmt_, ##__VA_ARGS__)
+//#endif
+#define LOG(_lvl_, _fmt_, ...) print_log(_lvl_, __FILE__, __PRETTY_FUNCTION__, __LINE__, _fmt_, ##__VA_ARGS__)
 
 #define E(_fmt_, ...) LOG(ERROR, _fmt_, ##__VA_ARGS__)
 #define W(_fmt_, ...) LOG(WARNING, _fmt_, ##__VA_ARGS__)

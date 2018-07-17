@@ -1,10 +1,19 @@
 
 #include "sockhdl.h"
 
-sockhdl::sockhdl(int fd, struct sockaddr_in *addr) : inputhdl(fd)
+#include <arpa/inet.h>
+#include <sys/types.h>
+
+bool sockhdl::open(int fd, struct sockaddr_in *addr)
 {
-	(void) inet_ntop(AF_INET, (void *) &(addr->sin_addr), m_ip, sizeof(m_ip) - 1);
-	m_port = (int) ntohs(addr->sin_port);
+	if (inputhdl::open(fd))
+	{
+		(void) inet_ntop(AF_INET, (void *) &(addr->sin_addr), m_ip, sizeof(m_ip) - 1);
+		m_port = (int) ntohs(addr->sin_port);
+
+		return true;
+	}
+	return false;
 }
 
 const char *sockhdl::get_ip()

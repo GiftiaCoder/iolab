@@ -7,8 +7,13 @@
 class inputhdl : public evthdl
 {
 public:
-	inputhdl(int fd);
+	inputhdl();
 	~inputhdl();
+	
+	bool open(int fd);
+	void close();
+
+	int get_fd();
 
 public:
 	virtual void read(int events, evtbus *bus) override;

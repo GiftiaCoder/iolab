@@ -73,15 +73,19 @@ void srvhdl::read(int events, evtbus *bus)
 	socklen_t addrsz = sizeof(cliaddr);
 	while ((clifd = accept(m_fd, (struct sockaddr *) &cliaddr, &addrsz)) >= 0)
 	{
-		sockhdl *hdl = new sockhdl(clifd, &cliaddr);
+		sockhdl *hdl = new sockhdl;
 		if (hdl)
 		{
-			I("accept addr: %s:%d", hdl->get_ip(), hdl->get_port());
-			if (bus->add(clifd, hdl))
+			if (hdl->open(clifd, &cliaddr))
 			{
+				I("accept addr: %s:%d", hdl->get_ip(), hdl->get_port());
+				if (bus->add(clifd, hdl))
+				{
+					continue;
+				}
+				E("regist sockhdl to bus fail");
 				continue;
 			}
-			E("regist sockhdl to bus fail");
 			continue;
 		}
 		E("new evthdl object fail, err: %s", ERRSTR);
@@ -96,6 +100,7 @@ void srvhdl::write(int events, evtbus *bus)
 
 bool srvhdl::error(int events, evtbus *bus)
 {
-	I("get error event, events: %018p", (void *) events);
+	I("get error event, events: %08X", events);
+	return true;
 }
 

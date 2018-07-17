@@ -7,22 +7,36 @@
 
 #include <liblog.h>
 
-inputhdl::inputhdl(int fd) : m_fd(fd) 
-{
-	int flag = fcntl(m_fd, F_GETFL, 0);
-	int ret = fcntl(m_fd, F_SETFL, flag | O_NONBLOCK);
-	if (ret)
-	{
-		E("fd: %d set nonblock fail, err: %s", ERRSTR);
-	}
-}
+inputhdl::inputhdl() : m_fd(-1) {}
 inputhdl::~inputhdl()
+{
+	close();	
+}
+
+bool inputhdl::open(int fd)
+{
+	int flag = fcntl(fd, F_GETFL, 0);
+	if (fcntl(fd, F_SETFL, flag | O_NONBLOCK))
+	{
+		E("set fd nonblock fail, err: %s", ERRSTR);
+		return false;
+	}
+	m_fd = fd;
+	return true;
+}
+
+void inputhdl::close()
 {
 	if (m_fd >= 0)
 	{
-		close(m_fd);
+		::close(m_fd);
 		m_fd = -1;
 	}
+}
+
+int inputhdl::get_fd()
+{
+	return m_fd;
 }
 
 void inputhdl::read(int events, evtbus *bus)
@@ -52,5 +66,6 @@ void inputhdl::write(int events, evtbus *bus)
 bool inputhdl::error(int events, evtbus *bus)
 {
 	I("get error event, err: %d,%s", errno, ERRSTR);
+	return true;
 }
 
